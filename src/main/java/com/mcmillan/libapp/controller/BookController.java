@@ -2,6 +2,7 @@ package com.mcmillan.libapp.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mcmillan.libapp.exception.ResourceNotFoundException;
 import com.mcmillan.libapp.model.Book;
 import com.mcmillan.libapp.service.BookServiceI;
 import com.mcmillan.libapp.service.BookServiceImpl;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -31,8 +33,26 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public ResponseEntity<List<Book>> getbooks() {
+    public ResponseEntity<List<Book>> getBooks() {
         return new ResponseEntity<List<Book>>(bookService.getBooks(), HttpStatus.OK);
     }
+
+    @GetMapping("/books/{id}")
+    public ResponseEntity<Object> getBook(@PathVariable("id") Long id) {
+        
+        try {
+            Book book = bookService.getBookById(id);
+            return new ResponseEntity<>(book, HttpStatus.OK);
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        
+    }
+    
     
 }

@@ -1,10 +1,10 @@
 package com.mcmillan.libapp.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.mcmillan.libapp.exception.ResourceNotFoundException;
 import com.mcmillan.libapp.model.Book;
 import com.mcmillan.libapp.repository.BookRepository;
 
@@ -31,5 +31,13 @@ public class BookServiceImpl implements BookServiceI {
         return bookRepository.findAll();
     }
 
-    
+    @Override
+    public Book getBookById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id is null");
+        }
+
+        return bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", id));
+        
+    }
 }
