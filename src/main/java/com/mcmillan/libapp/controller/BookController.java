@@ -11,11 +11,11 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -38,8 +38,20 @@ public class BookController {
     }
 
     @GetMapping("/books/{id}")
-    public ResponseEntity<Object> getBook(@PathVariable("id") Long id) {
-        
+    public ResponseEntity<Object> getBook(@PathVariable("id") String idString) {
+        // Validate if the ID is not blank
+        if (!StringUtils.hasText(idString)) {
+            return new ResponseEntity<>("ID cannot be blank", HttpStatus.BAD_REQUEST);
+        }
+
+        // Validate if the ID is a valid Long
+        Long id;
+        try {
+            id = Long.parseLong(idString);
+        } catch (NumberFormatException ex) {
+            return new ResponseEntity<>("Invalid ID format", HttpStatus.BAD_REQUEST);
+        }
+
         try {
             Book book = bookService.getBookById(id);
             return new ResponseEntity<>(book, HttpStatus.OK);
