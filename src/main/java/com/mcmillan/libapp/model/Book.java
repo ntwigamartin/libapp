@@ -1,5 +1,7 @@
 package com.mcmillan.libapp.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,5 +26,5 @@ public class Book {
     private String title;
 
     @Column(name = "book_price")
-    private String price;
+    private BigDecimal price;
 }
