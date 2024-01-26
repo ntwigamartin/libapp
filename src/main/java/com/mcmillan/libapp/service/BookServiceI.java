@@ -8,4 +8,5 @@ public interface BookServiceI {
     Book saveBook(Book book);
     List<Book> getBooks();
     Book getBookById(Long id);
+    Book updateBookById(Long id, Book obj);
 }

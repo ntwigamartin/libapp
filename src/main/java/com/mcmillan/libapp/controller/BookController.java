@@ -64,14 +64,30 @@ public class BookController {
         
     }
 
-    /* @PutMapping("{id}")
-    public ResponseEntity<Object> updateBookById(@PathVariable("id") String id, @RequestBody Object obj) {
-        if (!StringUtils.hasText(id)) {
-            return new ResponseEntity<>("Id Can not be blank", HttpStatus.BAD_REQUEST);
-        }
+    @PutMapping("{id}")
+    public ResponseEntity<Object> updateBookById(@PathVariable("id") String idString, @RequestBody Book obj) {
         
-        return entity;
-    } */
+        if (ValidateId.validate(idString) != null) {
+            return ValidateId.validate(idString);
+       }
+
+       try {
+        if (obj != null) {
+            Long id = Long.parseLong(idString);
+            Book book = bookService.updateBookById(id, obj);
+            return new ResponseEntity<>(book, HttpStatus.OK);
+           } else {
+            return new ResponseEntity<>("Invalid data", HttpStatus.BAD_REQUEST);
+           }
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
     
     
 }

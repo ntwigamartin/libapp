@@ -40,4 +40,26 @@ public class BookServiceImpl implements BookServiceI {
         return bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book", id));
         
     }
+
+    @Override
+    public Book updateBookById(Long id, Book obj) {
+
+        Book existingBook = getBookById(id);
+
+        if (obj.getPrice() != null) {
+            existingBook.setPrice(obj.getPrice());
+        }
+        
+        if (obj.getISBN() != null) {
+            existingBook.setISBN(obj.getISBN());
+        }
+
+        if (obj.getTitle() != null) {
+            existingBook.setTitle(obj.getTitle());
+        }
+        
+        
+        return bookRepository.save(existingBook);
+
+    }
 }
