@@ -16,7 +16,7 @@ public class LibappApplication {
 	}
 
 
-	@Bean
+	/* @Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
 
@@ -29,5 +29,5 @@ public class LibappApplication {
 			}
 
 		};
-	}
+	} */
 }

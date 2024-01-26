@@ -2,6 +2,7 @@ package com.mcmillan.libapp.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mcmillan.libapp.Utils.ValidateId;
 import com.mcmillan.libapp.exception.ResourceNotFoundException;
 import com.mcmillan.libapp.model.Book;
 import com.mcmillan.libapp.service.BookServiceI;
@@ -14,11 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
+@RequestMapping("/api/books")
 public class BookController {
     
     private BookServiceI bookService;
@@ -27,31 +32,24 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @PostMapping("/books")
+    @PostMapping()
     public ResponseEntity<Book> saveBook(@RequestBody Book book) {
         return new ResponseEntity<Book>(bookService.saveBook(book), HttpStatus.CREATED);
     }
 
-    @GetMapping("/books")
+    @GetMapping()
     public ResponseEntity<List<Book>> getBooks() {
         return new ResponseEntity<List<Book>>(bookService.getBooks(), HttpStatus.OK);
     }
 
-    @GetMapping("/books/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getBook(@PathVariable("id") String idString) {
-        // Validate if the ID is not blank
-        if (!StringUtils.hasText(idString)) {
-            return new ResponseEntity<>("ID cannot be blank", HttpStatus.BAD_REQUEST);
-        }
 
-        // Validate if the ID is a valid Long
-        Long id;
-        try {
-            id = Long.parseLong(idString);
-        } catch (NumberFormatException ex) {
-            return new ResponseEntity<>("Invalid ID format", HttpStatus.BAD_REQUEST);
-        }
+       if (ValidateId.validate(idString) != null) {
+            return ValidateId.validate(idString);
+       }
 
+       Long id = Long.parseLong(idString);
         try {
             Book book = bookService.getBookById(id);
             return new ResponseEntity<>(book, HttpStatus.OK);
@@ -65,6 +63,15 @@ public class BookController {
 
         
     }
+
+    /* @PutMapping("{id}")
+    public ResponseEntity<Object> updateBookById(@PathVariable("id") String id, @RequestBody Object obj) {
+        if (!StringUtils.hasText(id)) {
+            return new ResponseEntity<>("Id Can not be blank", HttpStatus.BAD_REQUEST);
+        }
+        
+        return entity;
+    } */
     
     
 }
