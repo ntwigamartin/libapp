@@ -9,4 +9,5 @@ public interface BookServiceI {
     List<Book> getBooks();
     Book getBookById(Long id);
     Book updateBookById(Long id, Book obj);
+    String deleteBook(Long id);
 }

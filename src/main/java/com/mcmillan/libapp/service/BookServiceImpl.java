@@ -62,4 +62,17 @@ public class BookServiceImpl implements BookServiceI {
         return bookRepository.save(existingBook);
 
     }
+
+    @Override
+    public String deleteBook(Long id) {
+        Book book = getBookById(id);
+        if (book != null) {
+            bookRepository.delete(book);
+            return "Book with id " + id + " deleted successfully";
+        }
+        
+        return null;
+    }
+
+    
 }
