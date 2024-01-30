@@ -42,5 +42,21 @@ public class UserServiceImpl implements UserServiceI{
         return userRepository.save(user);
 
     }
+
+
+    @Override
+    public String login(User user) {
+        if (user.getUsername().isBlank() || user.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Null username or password");
+        }
+
+        User existingUser = userRepository.findByUsername(user.getUsername());
+
+        if (existingUser.getPassword().equals(user.getPassword())) {
+            return "Login successful";
+        } else {
+            throw new IllegalArgumentException( "Invalid username or password");
+        }
+    }
     
 }
