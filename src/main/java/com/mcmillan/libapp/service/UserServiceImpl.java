@@ -2,8 +2,8 @@ package com.mcmillan.libapp.service;
 
 import java.util.List;
 
+import java.util.Map;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.mcmillan.libapp.exception.ExistingUserException;
 import com.mcmillan.libapp.exception.PasswordsDoNotMatchException;
@@ -21,26 +21,24 @@ public class UserServiceImpl implements UserServiceI{
 
 
     @Override
-    public User createUser(User user) {
-
-        if (user.getUsername().isBlank() || user.getPassword().isBlank()) {
+    public User createUser(Map<String, String> params) {
+        if (params.get("username").isBlank() || params.get("password").isBlank()) {
             throw new IllegalArgumentException("Null username or password");
         }
 
-        List<User> users = userRepository.findAll();
-
-        for (User existingUser : users) {
-            if (existingUser.getUsername().equalsIgnoreCase(user.getUsername())) {
-                throw new ExistingUserException(existingUser.getUsername());
-            }
+        if (userRepository.findByUsername(params.get("username")) != null) {
+            throw new ExistingUserException(params.get("username"));
         }
 
-        if (!user.getPassword().equals(user.getConfirmPassword())){
+        if (!params.get("password").equals(params.get("confirmPassword"))){
             throw new PasswordsDoNotMatchException();
         }
         
-        return userRepository.save(user);
-
+        User user = new User();
+        user.setUsername(params.get("username"));
+        user.setPassword(params.get("password"));
+        userRepository.save(user);
+        return user;
     }
 
 
