@@ -1,10 +1,12 @@
 package com.mcmillan.libapp.service;
 
+import java.security.MessageDigest;
 import java.util.List;
 
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
+import com.mcmillan.libapp.Utils.HashPassword;
 import com.mcmillan.libapp.exception.ExistingUserException;
 import com.mcmillan.libapp.exception.PasswordsDoNotMatchException;
 import com.mcmillan.libapp.model.User;
@@ -22,39 +24,60 @@ public class UserServiceImpl implements UserServiceI{
 
     @Override
     public User createUser(Map<String, String> params) {
-        if (params.get("username").isBlank() || params.get("password").isBlank()) {
+
+        String username = params.get("username");
+        String password = params.get("password");
+        String confirmPassword = params.get("confirmPassword");
+
+
+        if (username.isBlank() || password.isBlank()) {
             throw new IllegalArgumentException("Null username or password");
         }
 
-        if (userRepository.findByUsername(params.get("username")) != null) {
-            throw new ExistingUserException(params.get("username"));
+        if (userRepository.findByUsername(username) != null) {
+            throw new ExistingUserException(username);
         }
 
-        if (!params.get("password").equals(params.get("confirmPassword"))){
+        if (!password.equals(confirmPassword)){
             throw new PasswordsDoNotMatchException();
         }
-        
+
+        byte[] salt = HashPassword.generateSalt();
+        byte[] hashedPassword = HashPassword.generateHash(password, salt);
+
         User user = new User();
-        user.setUsername(params.get("username"));
-        user.setPassword(params.get("password"));
+        user.setUsername(username);
+        user.setPassword(hashedPassword);
+        user.setSalt(salt);
         userRepository.save(user);
         return user;
     }
 
 
     @Override
-    public String login(User user) {
-        if (user.getUsername().isBlank() || user.getPassword().isBlank()) {
+    public String login(Map<String, String> params) {
+        String username = params.get("username");
+        String password = params.get("password");
+
+        if (username.isBlank() || password.isBlank()) {
             throw new IllegalArgumentException("Null username or password");
         }
 
-        User existingUser = userRepository.findByUsername(user.getUsername());
+        User existingUser = userRepository.findByUsername(username);
+        if (existingUser == null) {
+            throw new IllegalArgumentException("User not found");
+        }
 
-        if (existingUser.getPassword().equals(user.getPassword())) {
+        byte[] salt = existingUser.getSalt();
+        byte[] hashedPassword = HashPassword.generateHash(password, salt);
+
+        // Compare the byte arrays directly
+        if (MessageDigest.isEqual(existingUser.getPassword(), hashedPassword)) {
             return "Login successful";
         } else {
-            throw new IllegalArgumentException( "Invalid username or password");
+            throw new IllegalArgumentException("Invalid username or password");
         }
     }
+
     
 }

@@ -6,5 +6,5 @@ import com.mcmillan.libapp.model.User;
 
 public interface UserServiceI {
     User createUser(Map<String, String> params);
-    String login(User user);
+    String login(Map<String, String> params);
 }

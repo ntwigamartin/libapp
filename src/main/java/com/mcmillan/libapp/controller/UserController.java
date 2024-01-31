@@ -42,9 +42,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody User user) {
+    public ResponseEntity<Object> login(@RequestBody Map<String, String> params) {
         try {
-            return new ResponseEntity<>(userService.login(user), HttpStatus.OK);
+            return new ResponseEntity<>(userService.login(params), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
