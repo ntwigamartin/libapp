@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api/v1/books")
 public class BookController {
     
     private BookServiceI bookService;

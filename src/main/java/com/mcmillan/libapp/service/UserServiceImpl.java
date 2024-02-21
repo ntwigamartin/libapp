@@ -1,5 +1,6 @@
 package com.mcmillan.libapp.service;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.util.List;
 
@@ -23,8 +24,7 @@ public class UserServiceImpl implements UserServiceI{
 
 
     @Override
-    public User createUser(Map<String, String> params) {
-
+    public User createUser(Map<String, String> params) throws UnsupportedEncodingException {
         String username = params.get("username");
         String password = params.get("password");
         String confirmPassword = params.get("confirmPassword");
@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserServiceI{
         byte[] salt = HashPassword.generateSalt();
         byte[] hashedPassword = HashPassword.generateHash(password, salt);
 
+        
         User user = new User();
         user.setUsername(username);
         user.setPassword(hashedPassword);
@@ -71,8 +72,10 @@ public class UserServiceImpl implements UserServiceI{
         byte[] salt = existingUser.getSalt();
         byte[] hashedPassword = HashPassword.generateHash(password, salt);
 
+        byte[] storedPasswordBytes = existingUser.getPassword();
+                
         // Compare the byte arrays directly
-        if (MessageDigest.isEqual(existingUser.getPassword(), hashedPassword)) {
+        if (MessageDigest.isEqual(storedPasswordBytes, hashedPassword)) {
             return "Login successful";
         } else {
             throw new IllegalArgumentException("Invalid username or password");
