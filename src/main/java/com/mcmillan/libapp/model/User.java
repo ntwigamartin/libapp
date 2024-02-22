@@ -3,8 +3,10 @@ package com.mcmillan.libapp.model;
 import java.util.Collection;
 
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Table(name = "users")
-public class User {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +32,14 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private byte[] password;
+    private String password;
 
     private byte[] salt;
+
+    @Enumerated
+    private Role role;
+
+    
 
     
 

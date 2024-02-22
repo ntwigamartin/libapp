@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.util.List;
 
 import java.util.Map;
+import java.util.Arrays;
 import org.springframework.stereotype.Service;
 
 import com.mcmillan.libapp.Utils.HashPassword;
@@ -45,10 +46,9 @@ public class UserServiceImpl implements UserServiceI{
         byte[] salt = HashPassword.generateSalt();
         byte[] hashedPassword = HashPassword.generateHash(password, salt);
 
-        
         User user = new User();
         user.setUsername(username);
-        user.setPassword(hashedPassword);
+        user.setPassword(Arrays.toString(hashedPassword));
         user.setSalt(salt);
         userRepository.save(user);
         return user;
@@ -72,15 +72,14 @@ public class UserServiceImpl implements UserServiceI{
         byte[] salt = existingUser.getSalt();
         byte[] hashedPassword = HashPassword.generateHash(password, salt);
 
-        byte[] storedPasswordBytes = existingUser.getPassword();
+        String storedPasswordBytes = existingUser.getPassword();
+
                 
         // Compare the byte arrays directly
-        if (MessageDigest.isEqual(storedPasswordBytes, hashedPassword)) {
+        if (storedPasswordBytes.equalsIgnoreCase(Arrays.toString(hashedPassword))) {
             return "Login successful";
         } else {
             throw new IllegalArgumentException("Invalid username or password");
         }
     }
-
-    
 }
