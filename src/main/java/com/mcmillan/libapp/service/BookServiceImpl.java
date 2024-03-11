@@ -8,14 +8,15 @@ import com.mcmillan.libapp.exception.ResourceNotFoundException;
 import com.mcmillan.libapp.model.Book;
 import com.mcmillan.libapp.repository.BookRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookServiceI {
+    
     
     private BookRepository bookRepository;
 
-    public BookServiceImpl(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
 
     @Override
     public Book saveBook(Book book) {
