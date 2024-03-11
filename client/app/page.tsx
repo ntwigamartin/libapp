@@ -73,6 +73,11 @@ export default function Home() {
               <button className="btn btn-success btn-sm">Login</button>
             </div>
           </form>
+          <div>
+            <h3 className="p-2">
+              Forgot password? Click <Link href={"/change-password"} className="link link-primary">here</Link> to change password
+            </h3>
+          </div>
           <h3 className="p-2">
               Do not have an account?
               <button 

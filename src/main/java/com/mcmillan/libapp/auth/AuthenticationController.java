@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -37,5 +38,10 @@ public class AuthenticationController {
         return ResponseEntity.ok(authService.authenticate(request));        
     }
     
+    @PutMapping("/update")
+    public ResponseEntity<AuthenticationResponse> update(@RequestBody AuthenticationRequest request) {
+        
+        return ResponseEntity.ok(authService.update(request));        
+    }
     
 }

@@ -2,10 +2,12 @@ package com.mcmillan.libapp.auth;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mcmillan.libapp.config.JwtService;
+import com.mcmillan.libapp.exception.ResourceNotFoundException;
 import com.mcmillan.libapp.model.Role;
 import com.mcmillan.libapp.model.User;
 import com.mcmillan.libapp.repository.UserRepository;
@@ -48,6 +50,14 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
             .token(jwtToken)
             .build();
+    }
+
+    public AuthenticationResponse update(AuthenticationRequest request) {
+        User user = repository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
 
