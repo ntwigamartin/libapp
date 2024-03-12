@@ -7,6 +7,8 @@ import com.mcmillan.libapp.exception.ResourceNotFoundException;
 import com.mcmillan.libapp.model.Book;
 import com.mcmillan.libapp.service.BookServiceI;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -23,13 +25,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/v1/books")
+@RequiredArgsConstructor
 public class BookController {
     
-    private BookServiceI bookService;
+    private final BookServiceI bookService;
 
-    public BookController(BookServiceI bookService) {
-        this.bookService = bookService;
-    }
 
     @PostMapping()
     public ResponseEntity<Book> saveBook(@RequestBody Book book) {

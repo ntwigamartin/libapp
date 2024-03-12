@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class BookServiceImpl implements BookServiceI {
     
     
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
 
     @Override

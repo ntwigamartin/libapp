@@ -1,7 +1,7 @@
 'use client'
-import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 
@@ -10,6 +10,7 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -28,10 +29,18 @@ export default function Home() {
       })
     });
     const data = await response.json();
+
     if(data.status == 403) {
       alert(data.message);
     }
+
+    if(data.message.includes('success')) {
+      sessionStorage.setItem("token", data.token);
+      router.push("/books");
+    }
+
     console.log(data);
+
     } catch (error: any) {
       setError(error);
       alert(error.message);
