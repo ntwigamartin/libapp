@@ -1,7 +1,10 @@
 package com.mcmillan.libapp.service;
 
+import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mcmillan.libapp.exception.ResourceNotFoundException;
@@ -65,14 +68,14 @@ public class BookServiceImpl implements BookServiceI {
     }
 
     @Override
-    public String deleteBook(Long id) {
+    public ResponseEntity<Object> deleteBook(Long id) {
         Book book = getBookById(id);
         if (book != null) {
             bookRepository.delete(book);
-            return "Book with id " + id + " deleted successfully";
+            return new ResponseEntity<>("{\"message\": \"Book with id " + id + " deleted successfully\"}", HttpStatus.OK);
         }
-        
-        return null;
+
+        return new ResponseEntity<>("{\"error\": \"Book not found\"}", HttpStatus.NOT_FOUND);
     }
 
     

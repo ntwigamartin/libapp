@@ -15,6 +15,7 @@ interface BookItemProps {
 
 const BookItem: React.FC<BookItemProps> = ( {book}) => {
       const [isPopupOpen, setIsPopupOpen] = useState(false);
+      const token = sessionStorage.getItem("token");
 
       const handleOpenPopup = () => {
         setIsPopupOpen(true);
@@ -22,6 +23,25 @@ const BookItem: React.FC<BookItemProps> = ( {book}) => {
 
       const handleClosePopup = () => {
         setIsPopupOpen(false);
+      };
+
+      const handleDelete = async () => {
+        const response = await fetch(`/api/v1/books/${book.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        const data = await response.json();
+        console.log(data);
+        
+        if (data.error) {
+          alert('Error: ' + data.error)
+        }else {
+          alert("Book deleted successfully")
+          window.location.reload();
+
+        }
       };
   
   return (
@@ -35,7 +55,9 @@ const BookItem: React.FC<BookItemProps> = ( {book}) => {
         <button onClick={handleOpenPopup}>Update</button>
         <BookEdit isOpen={isPopupOpen} onClose={handleClosePopup} book={book} />
       </td>
-      <td>Delete</td>
+      <td>
+        <button onClick={handleDelete}>Delete</button>
+      </td>
     </tr>
     </>
   )
