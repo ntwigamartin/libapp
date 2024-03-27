@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import BookEdit from './BookEdit';
 
 interface Book {
-    id: number;
+    id: string;
     title: string;
-    price: number;
+    price: string;
     isbn: string;
 }
 
@@ -14,15 +14,16 @@ interface BookItemProps {
 }
 
 const BookItem: React.FC<BookItemProps> = ( {book}) => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+      const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const handleOpenPopup = () => {
-    setIsPopupOpen(true);
-  };
+      const handleOpenPopup = () => {
+        setIsPopupOpen(true);
+      };
 
-  const handleClosePopup = () => {
-    setIsPopupOpen(false);
-  };
+      const handleClosePopup = () => {
+        setIsPopupOpen(false);
+      };
+  
   return (
     <>
       <tr className='hover'>
@@ -32,17 +33,11 @@ const BookItem: React.FC<BookItemProps> = ( {book}) => {
       <td>{book.price}</td>
       <td>
         <button onClick={handleOpenPopup}>Update</button>
-        <BookEdit isOpen={isPopupOpen} onClose={handleClosePopup} >
-          <h2>edit stuff here</h2>
-        </BookEdit>
+        <BookEdit isOpen={isPopupOpen} onClose={handleClosePopup} book={book} />
       </td>
       <td>Delete</td>
     </tr>
-    
-
     </>
-    
-    
   )
 }
 

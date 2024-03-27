@@ -4,9 +4,9 @@ import { log } from 'console';
 import React, { useEffect, useState } from 'react';
 
 interface Book {
-    id: number;
+    id: string;
     title: string;
-    price: number;
+    price: string;
     isbn: string;
 }
 
@@ -20,7 +20,7 @@ const Book = () => {
         const token = sessionStorage.getItem("token");
        
         const fetchBooks = async () => {
-            const response = await fetch("http://localhost:8080/api/v1/books", {
+            const response = await fetch("/api/v1/books", {
                 method: "GET",
                 headers: {"Authorization": `Bearer ${token}`}
                 
@@ -36,7 +36,6 @@ const Book = () => {
 
         fetchBooks();
     }, []);
-    console.log(books);
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <div className="overflow-x-auto">

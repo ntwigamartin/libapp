@@ -20,7 +20,7 @@ export default function Home() {
 
   const handleHttpRequest = async (path: string) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/auth/${path}`, {
+      const response = await fetch(`/api/v1/auth/${path}`, {
       method: "POST",
       headers: {"content-type": "application/json"},
       body: JSON.stringify({
