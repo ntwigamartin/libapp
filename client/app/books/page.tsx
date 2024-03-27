@@ -1,5 +1,6 @@
 'use client'
 import BookItem from '@/components/BookItem';
+import { log } from 'console';
 import React, { useEffect, useState } from 'react';
 
 interface Book {
@@ -12,9 +13,12 @@ interface Book {
 const Book = () => {
 
     const [books, setBooks] = useState([]);
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const token = sessionStorage.getItem("token");
+       
         const fetchBooks = async () => {
             const response = await fetch("http://localhost:8080/api/v1/books", {
                 method: "GET",
@@ -22,7 +26,12 @@ const Book = () => {
                 
             });
             const data = await response.json();
-            setBooks(data);
+            if(response.status === 200 && data.length > 0 ) {
+                setBooks(data);
+            } else {
+                setError(true);
+            }
+            setLoading(false);
         }
 
         fetchBooks();
@@ -41,12 +50,12 @@ const Book = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {books.map((book: Book) => (
+                    { loading? (<tr><td>Loading...</td></tr>): error? (<tr><td>Error Fetching books</td></tr>): (books.map((book: Book) => (
                         <BookItem 
                             key={book.id}
                             book={book}
                         />
-                    ))}
+                    )))}
                 </tbody>
             </table>
         </div>

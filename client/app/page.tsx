@@ -31,10 +31,11 @@ export default function Home() {
     const data = await response.json();
 
     if(data.status == 403) {
-      alert(data.message);
+      alert("Invalid credentials");
     }
 
     if(data.message.includes('success')) {
+      
       sessionStorage.setItem("token", data.token);
       router.push("/books");
     }
@@ -84,7 +85,7 @@ export default function Home() {
           </form>
           <div>
             <h3 className="p-2">
-              Forgot password? Click <Link href={"/change-password"} className="link link-primary">here</Link> to change password
+              Forgot password? Click <Link href={"/change-password"} className="link link-primary">here</Link> to change password.
             </h3>
           </div>
           <h3 className="p-2">
